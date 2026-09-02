@@ -93,8 +93,17 @@ export const LyricsOverlay: React.FC<LyricsOverlayProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-              <Mic2 className="h-5 w-5" />
+            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl overflow-hidden bg-indigo-500/20 text-indigo-400 border border-white/15 shadow-md">
+              {song.cover ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={song.cover}
+                  alt={song.title}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <Mic2 className="h-5 w-5" />
+              )}
             </div>
             <div>
               <h2 className="text-lg font-semibold text-white tracking-wide">

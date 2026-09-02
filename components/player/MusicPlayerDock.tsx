@@ -131,12 +131,21 @@ export const MusicPlayerDock: React.FC<MusicPlayerDockProps> = ({
           {/* Left: Track Details & Cover */}
           <div className="flex items-center gap-3 min-w-0 flex-1 sm:max-w-xs">
             <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-500/20 border border-indigo-400/30 overflow-hidden shadow-md">
-              <Disc
-                className={`h-6 w-6 text-indigo-300 ${
-                  isPlaying ? 'animate-spin' : ''
-                }`}
-                style={{ animationDuration: '6s' }}
-              />
+              {currentSong.cover ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={currentSong.cover}
+                  alt={currentSong.title}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <Disc
+                  className={`h-6 w-6 text-indigo-300 ${
+                    isPlaying ? 'animate-spin' : ''
+                  }`}
+                  style={{ animationDuration: '6s' }}
+                />
+              )}
             </div>
 
             <div className="min-w-0">

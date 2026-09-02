@@ -255,7 +255,7 @@ export const MediaSelectorModal: React.FC<MediaSelectorModalProps> = ({
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      {/* Play / Pause button in track row */}
+                      {/* Cover Thumbnail / Play button */}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -265,17 +265,29 @@ export const MediaSelectorModal: React.FC<MediaSelectorModalProps> = ({
                             onSelectSong(song);
                           }
                         }}
-                        className={`flex h-10 w-10 items-center justify-center rounded-2xl transition ${
-                          isActive
-                            ? 'bg-indigo-500 text-white shadow-lg'
-                            : 'bg-white/10 text-white/70 group-hover:bg-white/20 group-hover:text-white'
-                        }`}
+                        className="group/btn relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl overflow-hidden bg-indigo-500/20 border border-white/10 shadow-md"
                       >
-                        {isActive && isPlayingMusic ? (
-                          <Pause className="h-4 w-4" />
+                        {song.cover ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={song.cover}
+                            alt={song.title}
+                            className="h-full w-full object-cover"
+                          />
                         ) : (
-                          <Play className="h-4 w-4 ml-0.5" />
+                          <Music className="h-5 w-5 text-white/50" />
                         )}
+                        <div
+                          className={`absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity ${
+                            isActive ? 'opacity-100' : 'opacity-0 group-hover/btn:opacity-100'
+                          }`}
+                        >
+                          {isActive && isPlayingMusic ? (
+                            <Pause className="h-4 w-4 text-white" />
+                          ) : (
+                            <Play className="h-4 w-4 text-white ml-0.5" />
+                          )}
+                        </div>
                       </button>
 
                       <div>
