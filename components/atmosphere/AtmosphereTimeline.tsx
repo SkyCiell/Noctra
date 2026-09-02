@@ -100,7 +100,7 @@ export const AtmosphereTimeline: React.FC<AtmosphereTimelineProps> = ({
       </div>
 
       {/* Interactive 24-Hour Timeline Bar */}
-      <div className="relative my-4 px-2">
+      <div className="relative pt-6 pb-2 px-1">
         {/* Visual Sky Gradient Arc Background */}
         <div className="relative h-10 w-full rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-r from-[#070b19] via-[#2e1065] via-[#ea580c] via-[#38bdf8] via-[#e11d48] via-[#1e1b4b] to-[#070b19] shadow-inner">
           {/* Day / Night Horizon divider line */}
@@ -129,18 +129,20 @@ export const AtmosphereTimeline: React.FC<AtmosphereTimelineProps> = ({
           step="0.1"
           value={simulatedHour}
           onChange={(e) => onScrubHour(parseFloat(e.target.value))}
-          className="absolute inset-0 w-full h-10 opacity-0 cursor-pointer z-20"
+          className="absolute inset-x-1 bottom-2 h-10 opacity-0 cursor-pointer z-20"
         />
 
-        {/* Active Thumb / Cursor Marker */}
+        {/* Active Thumb / Cursor Marker (Clamped to avoid edge clipping) */}
         <div
-          className="absolute top-0 -translate-x-1/2 pointer-events-none transition-all duration-75 z-10"
-          style={{ left: `${(simulatedHour / 24) * 100}%` }}
+          className="absolute bottom-2 -translate-x-1/2 pointer-events-none transition-all duration-75 z-10"
+          style={{
+            left: `calc(16px + ${(simulatedHour / 24) * 100}% * (100% - 32px) / 100)`,
+          }}
         >
           <div className="flex flex-col items-center">
             {/* Tooltip bubble */}
             <div
-              className="rounded-full px-2.5 py-0.5 text-[11px] font-mono font-bold text-white shadow-xl border -translate-y-5"
+              className="rounded-full px-2.5 py-0.5 text-[10px] sm:text-[11px] font-mono font-bold text-white shadow-xl border -translate-y-1 whitespace-nowrap"
               style={{
                 backgroundColor: accentColor,
                 borderColor: 'rgba(255,255,255,0.4)',
