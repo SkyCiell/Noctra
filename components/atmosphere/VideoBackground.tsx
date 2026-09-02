@@ -24,16 +24,14 @@ export const VideoBackground: React.FC<VideoBackgroundProps> = ({
   isPlaying = false,
   currentTime = 0,
 }) => {
-  const [videoError, setVideoError] = useState(false);
   const [currentSrc, setCurrentSrc] = useState(activeVideo.videoSrc);
   const [nextSrc, setNextSrc] = useState<string | null>(null);
   const [isCrossfading, setIsCrossfading] = useState(false);
   const currentVideoRef = useRef<HTMLVideoElement | null>(null);
   const nextVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  // Handle video source changes with smooth crossfade
+  // Crossfade handling when activeVideo changes
   useEffect(() => {
-    setVideoError(false);
     if (activeVideo.videoSrc !== currentSrc) {
       setNextSrc(activeVideo.videoSrc);
       setIsCrossfading(true);
@@ -46,16 +44,54 @@ export const VideoBackground: React.FC<VideoBackgroundProps> = ({
     }
   }, [activeVideo.videoSrc, currentSrc]);
 
-  // Synchronize Video Play / Pause state with player
+  // Mobile video unlock & initialization
   useEffect(() => {
     const video = currentVideoRef.current;
     if (!video) return;
 
-    if (isPlaying && enabled && !videoError) {
-      // Sync time if drifted
+    // Strict requirements for mobile iOS / Android inline playback
+    video.muted = true;
+    video.defaultMuted = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('x5-playsinline', 'true');
+
+    // First attempt to load and play
+    video.load();
+    if (isPlaying && enabled) {
+      video.play().catch(() => {});
+    }
+
+    // Touch listener to unlock mobile autoplay policy on first user tap
+    const handleFirstTouch = () => {
+      if (video && enabled) {
+        if (isPlaying) {
+          video.play().catch(() => {});
+        }
+      }
+      window.removeEventListener('touchstart', handleFirstTouch);
+      window.removeEventListener('click', handleFirstTouch);
+    };
+
+    window.addEventListener('touchstart', handleFirstTouch, { passive: true });
+    window.addEventListener('click', handleFirstTouch, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleFirstTouch);
+      window.removeEventListener('click', handleFirstTouch);
+    };
+  }, [currentSrc]);
+
+  // Synchronize Play / Pause with music player
+  useEffect(() => {
+    const video = currentVideoRef.current;
+    if (!video) return;
+
+    if (isPlaying && enabled) {
+      video.muted = true;
       if (typeof currentTime === 'number' && video.duration && !isNaN(video.duration)) {
         const target = currentTime % video.duration;
-        if (Math.abs(video.currentTime - target) > 0.4) {
+        if (Math.abs(video.currentTime - target) > 0.5) {
           video.currentTime = target;
         }
       }
@@ -63,24 +99,25 @@ export const VideoBackground: React.FC<VideoBackgroundProps> = ({
     } else {
       video.pause();
     }
-  }, [isPlaying, enabled, videoError, currentSrc, currentTime]);
+  }, [isPlaying, enabled, currentSrc, currentTime]);
 
-  // Sync video position when user seeks through music or when turning video back ON
+  // Sync video time when seeking
   useEffect(() => {
     const video = currentVideoRef.current;
     if (!video) return;
 
     if (enabled && typeof currentTime === 'number' && video.duration && !isNaN(video.duration)) {
       const target = currentTime % video.duration;
-      if (Math.abs(video.currentTime - target) > 0.4) {
+      if (Math.abs(video.currentTime - target) > 0.5) {
         video.currentTime = target;
       }
     }
   }, [currentTime, enabled]);
 
-  // Helper when metadata loads to immediately sync current second
   const handleLoadedMetadata = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     const video = e.currentTarget;
+    video.muted = true;
+    video.defaultMuted = true;
     if (typeof currentTime === 'number' && video.duration && !isNaN(video.duration)) {
       video.currentTime = currentTime % video.duration;
     }
@@ -89,7 +126,7 @@ export const VideoBackground: React.FC<VideoBackgroundProps> = ({
     }
   };
 
-  // Thematic CSS fallback when video is missing or loading
+  // Thematic CSS fallback base
   const getThemeFallbackClass = () => {
     const t = theme || activeVideo.backdropTheme || 'night_city';
     switch (t) {
@@ -124,51 +161,50 @@ export const VideoBackground: React.FC<VideoBackgroundProps> = ({
         }}
       />
 
-      {/* Video layer (Always kept mounted in DOM to preserve playback buffer, toggled via opacity) */}
-      {!videoError && (
-        <div
-          className="absolute inset-0 transition-opacity duration-700"
-          style={{
-            opacity: enabled ? opacity : 0,
-            visibility: enabled && opacity > 0 ? 'visible' : 'hidden',
-            filter: blur > 0 ? `blur(${blur}px)` : undefined,
-            transform: blur > 0 ? 'scale(1.05)' : 'none',
-          }}
-        >
-          {/* Active Video Element */}
+      {/* Video layer */}
+      <div
+        className="absolute inset-0 transition-opacity duration-700"
+        style={{
+          opacity: enabled ? opacity : 0,
+          visibility: enabled && opacity > 0 ? 'visible' : 'hidden',
+          filter: blur > 0 ? `blur(${blur}px)` : undefined,
+          transform: blur > 0 ? 'scale(1.05)' : 'none',
+        }}
+      >
+        {/* Active Video Element with direct src and full mobile playsInline support */}
+        <video
+          ref={currentVideoRef}
+          key={currentSrc}
+          src={currentSrc}
+          autoPlay={isPlaying}
+          loop
+          muted
+          playsInline
+          preload="auto"
+          onLoadedMetadata={handleLoadedMetadata}
+          className={`h-full w-full object-cover transition-opacity duration-700 ${
+            isCrossfading ? 'opacity-0' : 'opacity-100'
+          }`}
+        />
+
+        {/* Next Video Crossfade Element */}
+        {nextSrc && (
           <video
-            ref={currentVideoRef}
-            key={currentSrc}
+            ref={nextVideoRef}
+            key={nextSrc}
+            src={nextSrc}
+            autoPlay={isPlaying}
             loop
             muted
             playsInline
+            preload="auto"
             onLoadedMetadata={handleLoadedMetadata}
-            onError={() => setVideoError(true)}
-            className={`h-full w-full object-cover transition-opacity duration-700 ${
-              isCrossfading ? 'opacity-0' : 'opacity-100'
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+              isCrossfading ? 'opacity-100' : 'opacity-0'
             }`}
-          >
-            <source src={currentSrc} type="video/mp4" />
-          </video>
-
-          {/* Next Video Crossfade Element */}
-          {nextSrc && (
-            <video
-              ref={nextVideoRef}
-              key={nextSrc}
-              loop
-              muted
-              playsInline
-              onLoadedMetadata={handleLoadedMetadata}
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
-                isCrossfading ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <source src={nextSrc} type="video/mp4" />
-            </video>
-          )}
-        </div>
-      )}
+          />
+        )}
+      </div>
 
       {/* Atmospheric Vignette & Color Grade Overlays */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#05060b]/90 via-[#05060b]/40 to-[#05060b]/60 pointer-events-none" />
