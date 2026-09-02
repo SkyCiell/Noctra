@@ -125,15 +125,15 @@ export const AtmosphereHeader: React.FC<AtmosphereHeaderProps> = ({
   );
 
   return (
-    <header className="relative z-30 flex w-full items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+    <header className="relative z-30 flex w-full items-center justify-between px-2.5 py-2.5 sm:px-6 lg:px-8 gap-1.5 sm:gap-3">
       {/* Brand & Atmosphere Badge */}
-      <div className="flex items-center gap-3">
-        <div className="group relative flex items-center gap-2.5 rounded-full bg-white/5 px-3 py-1.5 backdrop-blur-xl border border-white/10 shadow-lg transition hover:bg-white/10">
-          <div className="relative flex h-3 w-3 items-center justify-center">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        <div className="group relative flex items-center gap-2 rounded-full bg-white/5 px-2.5 sm:px-3 py-1.5 backdrop-blur-xl border border-white/10 shadow-lg transition hover:bg-white/10">
+          <div className="relative flex h-2.5 w-2.5 sm:h-3 sm:w-3 items-center justify-center">
             <span className="absolute h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
-            <span className="relative h-2 w-2 rounded-full bg-indigo-400" />
+            <span className="relative h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-indigo-400" />
           </div>
-          <span className="font-semibold tracking-wider text-white text-sm">
+          <span className="font-semibold tracking-wider text-white text-xs sm:text-sm">
             NOCTRA
           </span>
         </div>
@@ -142,11 +142,12 @@ export const AtmosphereHeader: React.FC<AtmosphereHeaderProps> = ({
         {isTimeScrubbed && (
           <button
             onClick={onResetTime}
-            className="flex items-center gap-1.5 rounded-full bg-amber-500/20 px-3 py-1 text-xs font-medium text-amber-300 backdrop-blur-md border border-amber-500/30 hover:bg-amber-500/30 transition animate-pulse"
+            className="flex items-center gap-1 rounded-full bg-amber-500/20 px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-medium text-amber-300 backdrop-blur-md border border-amber-500/30 hover:bg-amber-500/30 transition animate-pulse"
             title="Reset to real-time"
           >
             <RotateCcw className="h-3 w-3" />
-            <span>Time Travel Mode</span>
+            <span className="hidden xs:inline">Time Travel Mode</span>
+            <span className="xs:hidden">Scrubbed</span>
           </button>
         )}
       </div>
@@ -154,23 +155,23 @@ export const AtmosphereHeader: React.FC<AtmosphereHeaderProps> = ({
       {/* Center: Search Bar */}
       <div
         ref={searchContainerRef}
-        className="relative w-full max-w-xs sm:max-w-sm md:max-w-md mx-2 sm:mx-4"
+        className="relative flex-1 max-w-[170px] xs:max-w-[220px] sm:max-w-sm md:max-w-md mx-1 sm:mx-4"
       >
         <div className="relative flex items-center">
-          <Search className="absolute left-3.5 h-4 w-4 text-white/40 pointer-events-none" />
+          <Search className="absolute left-2.5 sm:left-3.5 h-3.5 w-3.5 text-white/40 pointer-events-none" />
           <input
             type="text"
-            placeholder="Search any world city..."
+            placeholder="Search city..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
               setIsSearchOpen(true);
             }}
             onFocus={() => setIsSearchOpen(true)}
-            className="w-full rounded-full bg-white/5 py-1.5 pl-10 pr-4 text-sm text-white placeholder-white/40 backdrop-blur-xl border border-white/10 outline-none transition focus:bg-white/10 focus:border-indigo-400/50 focus:ring-1 focus:ring-indigo-400/50 shadow-inner"
+            className="w-full rounded-full bg-white/5 py-1 sm:py-1.5 pl-8 sm:pl-10 pr-3 sm:pr-4 text-xs sm:text-sm text-white placeholder-white/40 backdrop-blur-xl border border-white/10 outline-none transition focus:bg-white/10 focus:border-indigo-400/50 focus:ring-1 focus:ring-indigo-400/50 shadow-inner"
           />
           {isSearching && (
-            <div className="absolute right-3.5 h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/20 border-t-indigo-400" />
+            <div className="absolute right-2.5 sm:right-3.5 h-3 w-3 sm:h-3.5 sm:w-3.5 animate-spin rounded-full border-2 border-white/20 border-t-indigo-400" />
           )}
         </div>
 

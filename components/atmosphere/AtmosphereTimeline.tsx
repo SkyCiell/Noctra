@@ -68,33 +68,35 @@ export const AtmosphereTimeline: React.FC<AtmosphereTimelineProps> = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto rounded-3xl bg-white/5 p-4 sm:p-6 backdrop-blur-2xl border border-white/10 shadow-2xl transition hover:border-white/15 select-none">
+    <div className="w-full max-w-4xl mx-auto rounded-2xl sm:rounded-3xl bg-white/5 p-3.5 sm:p-6 backdrop-blur-2xl border border-white/10 shadow-2xl transition hover:border-white/15 select-none my-3">
       {/* Header with Title and Reset */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 sm:mb-4">
         <div className="flex items-center gap-2">
-          <Clock className="h-4 w-4 text-indigo-400" />
-          <h3 className="text-sm font-semibold tracking-wide text-white">
-            Atmosphere Solar Timeline & Time Travel
+          <Clock className="h-4 w-4 text-indigo-400 shrink-0" />
+          <h3 className="text-xs sm:text-sm font-semibold tracking-wide text-white">
+            Atmosphere Solar Timeline
           </h3>
-          <span className="hidden sm:inline-block text-xs text-white/40">
+          <span className="hidden md:inline-block text-xs text-white/40">
             • Drag to preview celestial conditions
           </span>
         </div>
 
-        {isScrubbed ? (
-          <button
-            onClick={onReset}
-            className="flex items-center gap-1.5 rounded-full bg-amber-500/20 px-3 py-1 text-xs font-medium text-amber-300 backdrop-blur-md border border-amber-500/30 hover:bg-amber-500/30 transition"
-          >
-            <RotateCcw className="h-3 w-3" />
-            <span>Reset to Live Time</span>
-          </button>
-        ) : (
-          <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Live Atmosphere</span>
-          </div>
-        )}
+        <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+          {isScrubbed ? (
+            <button
+              onClick={onReset}
+              className="flex items-center gap-1.5 rounded-full bg-amber-500/20 px-3 py-1 text-[11px] sm:text-xs font-medium text-amber-300 backdrop-blur-md border border-amber-500/30 hover:bg-amber-500/30 transition active:scale-95"
+            >
+              <RotateCcw className="h-3 w-3" />
+              <span>Reset to Live Time</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Live Atmosphere</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Interactive 24-Hour Timeline Bar */}

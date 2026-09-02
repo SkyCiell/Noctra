@@ -73,28 +73,28 @@ export const AmbientSoundboard: React.FC<AmbientSoundboardProps> = ({
       />
 
       {/* Main Drawer / Modal */}
-      <div className="relative z-10 flex h-auto max-h-[90vh] w-full max-w-2xl flex-col rounded-3xl bg-white/[0.04] p-6 backdrop-blur-3xl border border-white/15 shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
+      <div className="relative z-10 flex h-auto max-h-[88vh] w-full max-w-[96vw] sm:max-w-2xl flex-col rounded-2xl sm:rounded-3xl bg-white/[0.04] p-3.5 sm:p-6 backdrop-blur-3xl border border-white/15 shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-              <Volume2 className="h-5 w-5" />
+        <div className="flex items-center justify-between border-b border-white/10 pb-3 sm:pb-4 mb-3 sm:mb-4">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 mr-2">
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+              <Volume2 className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
-            <div>
-              <h2 className="text-lg font-semibold text-white tracking-wide">
-                Multi-Channel Ambient Soundboard
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-lg font-semibold text-white tracking-wide truncate">
+                Ambient Soundboard
               </h2>
-              <p className="text-xs text-white/50">
+              <p className="text-[10px] sm:text-xs text-white/50 truncate">
                 Procedural Web Audio environment layers
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {anyActive && (
               <button
                 onClick={onStopAll}
-                className="flex items-center gap-1.5 rounded-full bg-rose-500/15 px-3 py-1 text-xs text-rose-300 border border-rose-500/30 hover:bg-rose-500/25 transition"
+                className="flex items-center gap-1 rounded-full bg-rose-500/15 px-2.5 py-1 text-[11px] sm:text-xs text-rose-300 border border-rose-500/30 hover:bg-rose-500/25 transition active:scale-95"
               >
                 <Power className="h-3 w-3" />
                 <span>Mute All</span>
@@ -102,21 +102,22 @@ export const AmbientSoundboard: React.FC<AmbientSoundboardProps> = ({
             )}
             <button
               onClick={onClose}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition"
+              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition active:scale-95"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </div>
         </div>
 
         {/* Master Ambient Volume Slider */}
-        <div className="mb-4 flex items-center justify-between rounded-2xl bg-white/5 p-3.5 backdrop-blur-md border border-white/10">
-          <div className="flex items-center gap-2 text-xs font-medium text-white/80">
-            {masterVolume > 0 ? <Volume2 className="h-4 w-4 text-indigo-400" /> : <VolumeX className="h-4 w-4 text-white/40" />}
-            <span>Master Ambient Level</span>
+        <div className="mb-3 sm:mb-4 flex items-center justify-between gap-2 rounded-xl sm:rounded-2xl bg-white/5 p-2.5 sm:p-3.5 backdrop-blur-md border border-white/10">
+          <div className="flex items-center gap-1.5 text-xs font-medium text-white/80 shrink-0">
+            {masterVolume > 0 ? <Volume2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-indigo-400" /> : <VolumeX className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white/40" />}
+            <span className="hidden xs:inline">Master Ambient</span>
+            <span className="xs:hidden">Master</span>
           </div>
 
-          <div className="flex items-center gap-3 w-48">
+          <div className="flex items-center gap-2 sm:gap-3 w-36 xs:w-48">
             <input
               type="range"
               min="0"
@@ -126,7 +127,7 @@ export const AmbientSoundboard: React.FC<AmbientSoundboardProps> = ({
               onChange={(e) => onChangeMasterVolume(parseFloat(e.target.value))}
               className="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-indigo-400"
             />
-            <span className="w-8 text-right font-mono text-xs text-white/60">
+            <span className="w-8 text-right font-mono text-[11px] sm:text-xs text-white/60">
               {Math.round(masterVolume * 100)}%
             </span>
           </div>

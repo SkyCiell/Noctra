@@ -67,7 +67,7 @@ export const MediaSelectorModal: React.FC<MediaSelectorModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 select-none animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-6 select-none animate-fadeIn">
       {/* Backdrop */}
       <div
         onClick={onClose}
@@ -75,40 +75,40 @@ export const MediaSelectorModal: React.FC<MediaSelectorModalProps> = ({
       />
 
       {/* Main Container */}
-      <div className="relative z-10 flex h-[85vh] w-full max-w-3xl flex-col rounded-3xl bg-white/[0.04] p-6 backdrop-blur-3xl border border-white/15 shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
+      <div className="relative z-10 flex h-[88vh] sm:h-[85vh] w-full max-w-[96vw] sm:max-w-3xl flex-col rounded-2xl sm:rounded-3xl bg-white/[0.04] p-3.5 sm:p-6 backdrop-blur-3xl border border-white/15 shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
         {/* Header with Tabs */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3 sm:pb-4 mb-3 sm:mb-4">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={() => setActiveTab('video')}
-              className={`flex items-center gap-2 rounded-2xl px-4 py-2 text-xs font-semibold tracking-wide transition ${
+              className={`flex items-center gap-1.5 rounded-xl sm:rounded-2xl px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold tracking-wide transition ${
                 activeTab === 'video'
                   ? 'bg-indigo-600/40 text-white border border-indigo-400/50 shadow-md'
                   : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
               }`}
             >
-              <Video className="h-4 w-4" />
-              <span>Background Visuals</span>
+              <Video className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span>Visuals</span>
             </button>
 
             <button
               onClick={() => setActiveTab('music')}
-              className={`flex items-center gap-2 rounded-2xl px-4 py-2 text-xs font-semibold tracking-wide transition ${
+              className={`flex items-center gap-1.5 rounded-xl sm:rounded-2xl px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold tracking-wide transition ${
                 activeTab === 'music'
                   ? 'bg-indigo-600/40 text-white border border-indigo-400/50 shadow-md'
                   : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
               }`}
             >
-              <Music className="h-4 w-4" />
-              <span>Atmospheric Music</span>
+              <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span>Music</span>
             </button>
           </div>
 
           <button
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition"
+            className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition active:scale-95"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </div>
 

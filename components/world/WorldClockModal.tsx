@@ -73,7 +73,7 @@ export const WorldClockModal: React.FC<WorldClockModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 select-none animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-6 select-none animate-fadeIn">
       {/* Backdrop */}
       <div
         onClick={onClose}
@@ -81,28 +81,28 @@ export const WorldClockModal: React.FC<WorldClockModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative z-10 flex h-[85vh] w-full max-w-2xl flex-col rounded-3xl bg-white/[0.04] p-6 backdrop-blur-3xl border border-white/15 shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
+      <div className="relative z-10 flex h-[88vh] sm:h-[85vh] w-full max-w-[96vw] sm:max-w-2xl flex-col rounded-2xl sm:rounded-3xl bg-white/[0.04] p-3.5 sm:p-6 backdrop-blur-3xl border border-white/15 shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-              <Globe className="h-5 w-5" />
+        <div className="flex items-center justify-between border-b border-white/10 pb-3 sm:pb-4 mb-3 sm:mb-4">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 mr-2">
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+              <Globe className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
-            <div>
-              <h2 className="text-lg font-semibold text-white tracking-wide">
-                World Clocks & Saved Atmosphere Hubs
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-lg font-semibold text-white tracking-wide truncate">
+                World Clocks & Hubs
               </h2>
-              <p className="text-xs text-white/50">
-                Switch active location or track global time zones
+              <p className="text-[10px] sm:text-xs text-white/50 truncate">
+                Switch location or track global time zones
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition"
+            className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition active:scale-95"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </div>
 

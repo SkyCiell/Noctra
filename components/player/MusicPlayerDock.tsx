@@ -127,10 +127,10 @@ export const MusicPlayerDock: React.FC<MusicPlayerDockProps> = ({
         </div>
 
         {/* Player Controls Row */}
-        <div className="flex items-center justify-between gap-2 sm:gap-4">
+        <div className="flex items-center justify-between gap-1.5 sm:gap-4">
           {/* Left: Track Details & Cover */}
-          <div className="flex items-center gap-3 min-w-0 flex-1 sm:max-w-xs">
-            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-500/20 border border-indigo-400/30 overflow-hidden shadow-md">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1 max-w-[140px] xs:max-w-[170px] sm:max-w-xs">
+            <div className="relative flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-indigo-500/20 border border-indigo-400/30 overflow-hidden shadow-md">
               {currentSong.cover ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -140,7 +140,7 @@ export const MusicPlayerDock: React.FC<MusicPlayerDockProps> = ({
                 />
               ) : (
                 <Disc
-                  className={`h-6 w-6 text-indigo-300 ${
+                  className={`h-5 w-5 text-indigo-300 ${
                     isPlaying ? 'animate-spin' : ''
                   }`}
                   style={{ animationDuration: '6s' }}
@@ -149,12 +149,10 @@ export const MusicPlayerDock: React.FC<MusicPlayerDockProps> = ({
             </div>
 
             <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <h4 className="truncate font-semibold text-white text-xs sm:text-sm">
-                  {currentSong.title}
-                </h4>
-              </div>
-              <p className="truncate text-[11px] text-white/50">
+              <h4 className="truncate font-semibold text-white text-xs sm:text-sm">
+                {currentSong.title}
+              </h4>
+              <p className="truncate text-[10px] sm:text-[11px] text-white/50">
                 {currentSong.artist}
               </p>
             </div>
@@ -162,11 +160,11 @@ export const MusicPlayerDock: React.FC<MusicPlayerDockProps> = ({
 
           {/* Center: Playback Buttons & Visualizer */}
           <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2 sm:gap-4">
-              {/* Shuffle */}
+            <div className="flex items-center gap-1 sm:gap-3 md:gap-4">
+              {/* Shuffle (desktop) */}
               <button
                 onClick={onToggleShuffle}
-                className={`p-2 transition rounded-full ${
+                className={`hidden sm:flex p-2 transition rounded-full ${
                   isShuffle
                     ? 'text-indigo-400 bg-indigo-500/15'
                     : 'text-white/40 hover:text-white'
@@ -179,8 +177,8 @@ export const MusicPlayerDock: React.FC<MusicPlayerDockProps> = ({
               {/* Prev */}
               <button
                 onClick={onPrevSong}
-                className="p-2 text-white/70 hover:text-white transition rounded-full"
-                title="Previous Track (ArrowLeft)"
+                className="p-1.5 sm:p-2 text-white/70 hover:text-white transition rounded-full active:scale-90"
+                title="Previous Track"
               >
                 <SkipBack className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
@@ -188,29 +186,29 @@ export const MusicPlayerDock: React.FC<MusicPlayerDockProps> = ({
               {/* Play / Pause Main Button */}
               <button
                 onClick={onTogglePlay}
-                className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white text-black shadow-[0_0_25px_rgba(255,255,255,0.4)] transition hover:scale-105 active:scale-95"
-                title="Play / Pause (Space)"
+                className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.4)] transition hover:scale-105 active:scale-95"
+                title="Play / Pause"
               >
                 {isPlaying ? (
-                  <Pause className="h-5 w-5 fill-current" />
+                  <Pause className="h-4 w-4 sm:h-5 sm:w-5 fill-current" />
                 ) : (
-                  <Play className="h-5 w-5 fill-current ml-0.5" />
+                  <Play className="h-4 w-4 sm:h-5 sm:w-5 fill-current ml-0.5" />
                 )}
               </button>
 
               {/* Next */}
               <button
                 onClick={onNextSong}
-                className="p-2 text-white/70 hover:text-white transition rounded-full"
-                title="Next Track (ArrowRight)"
+                className="p-1.5 sm:p-2 text-white/70 hover:text-white transition rounded-full active:scale-90"
+                title="Next Track"
               >
                 <SkipForward className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
 
-              {/* Repeat */}
+              {/* Repeat (desktop) */}
               <button
                 onClick={onCycleRepeat}
-                className={`p-2 transition rounded-full ${
+                className={`hidden sm:flex p-2 transition rounded-full ${
                   repeatMode !== 'off'
                     ? 'text-indigo-400 bg-indigo-500/15'
                     : 'text-white/40 hover:text-white'
@@ -227,7 +225,7 @@ export const MusicPlayerDock: React.FC<MusicPlayerDockProps> = ({
           </div>
 
           {/* Right: Audio Visualizer, Volume & Utility Buttons */}
-          <div className="flex items-center justify-end gap-2 sm:gap-3 flex-1">
+          <div className="flex items-center justify-end gap-1.5 sm:gap-2.5 flex-1">
             {/* Visualizer canvas */}
             <div className="hidden lg:flex items-center px-2">
               <AudioVisualizer isPlaying={isPlaying} accentColor={accentColor} />
