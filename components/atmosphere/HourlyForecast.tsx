@@ -3,7 +3,7 @@
 import React from 'react';
 import { CloudRain, Sun, Moon } from 'lucide-react';
 import { HourlyForecastData } from '@/types';
-import { formatLocalTime, formatTemperature } from '@/lib/utils/formatters';
+import { formatLocalTime, formatTemperature, getLocalHourInTimezone } from '@/lib/utils/formatters';
 import { getWeatherInfo } from '@/lib/weather/weather-codes';
 
 interface HourlyForecastProps {
@@ -42,7 +42,7 @@ export const HourlyForecast: React.FC<HourlyForecastProps> = ({
           const info = getWeatherInfo(code);
           const precipProb = hourly.precipitationProbability[idx] ?? 0;
           const isDay = Boolean(hourly.isDay[idx]);
-          const cardHour = date.getHours();
+          const cardHour = Math.floor(getLocalHourInTimezone(date, timezone));
           const isSelected = selectedHour !== undefined && Math.floor(selectedHour) === cardHour;
 
           return (

@@ -17,8 +17,9 @@ import {
   Disc,
   ListMusic,
 } from 'lucide-react';
-import { SongMetadata } from '@/types';
+import { LyricLine, SongMetadata } from '@/types';
 import { formatTimeSeconds } from '@/lib/utils/formatters';
+import { getActiveLyricIndex, parseLrcLyrics } from '@/lib/lyrics/parser';
 import { AudioVisualizer } from './AudioVisualizer';
 import { audioManager } from '@/lib/audio/audio-context';
 import { synthMusicPlayer } from '@/lib/audio/synth-music';
@@ -74,7 +75,33 @@ export const MusicPlayerDock: React.FC<MusicPlayerDockProps> = ({
 }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [prevVolume, setPrevVolume] = useState(volume);
+  const [lyricsLines, setLyricsLines] = useState<LyricLine[]>([]);
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  useEffect(() => {
+    if (!currentSong.lyricsSrc) {
+      setLyricsLines([]);
+      return;
+    }
+    let isMounted = true;
+    fetch(currentSong.lyricsSrc, { cache: 'no-cache' })
+      .then((res) => (res.ok ? res.text() : ''))
+      .then((text) => {
+        if (isMounted && text) {
+          const parsed = parseLrcLyrics(text);
+          setLyricsLines(parsed.lines);
+        }
+      })
+      .catch(() => {
+        if (isMounted) setLyricsLines([]);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [currentSong.lyricsSrc, currentSong.id]);
+
+  const activeLyricIdx = getActiveLyricIndex(lyricsLines, currentTime);
+  const currentLyric = lyricsLines[activeLyricIdx]?.text || '';
 
   const handleMuteToggle = () => {
     if (isMuted) {
@@ -90,6 +117,23 @@ export const MusicPlayerDock: React.FC<MusicPlayerDockProps> = ({
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 px-3 pb-3 sm:px-6 sm:pb-6 pointer-events-none select-none">
       <div className="pointer-events-auto mx-auto max-w-5xl rounded-3xl bg-white/[0.06] p-3 sm:p-4 backdrop-blur-3xl border border-white/15 shadow-[0_10px_40px_rgba(0,0,0,0.6)] transition hover:border-white/25">
+        {/* Real-time Synchronized Live Lyric Pill */}
+        {isPlaying && currentLyric && !isLyricsOpen && (
+          <button
+            onClick={onToggleLyrics}
+            className="group mb-2.5 flex items-center justify-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 hover:border-white/25 transition mx-auto cursor-pointer max-w-md w-full shadow-sm backdrop-blur-md text-left active:scale-98"
+            title="Click to open full synchronized lyrics (L)"
+          >
+            <Mic2
+              className="h-3 w-3 shrink-0 transition-transform group-hover:scale-110"
+              style={{ color: accentColor }}
+            />
+            <span className="text-xs sm:text-[13px] font-medium text-white/90 truncate tracking-wide group-hover:text-white transition">
+              {currentLyric}
+            </span>
+          </button>
+        )}
+
         {/* Top Mini Scrubber Bar */}
         <div className="group relative mb-3 flex items-center gap-3">
           <span className="font-mono text-[11px] text-white/50 w-10 text-right">

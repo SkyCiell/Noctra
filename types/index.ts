@@ -161,6 +161,7 @@ export interface SongMetadata {
   atmosphereTags: AtmosphereTag[];
   genre?: string;
   ambientType?: string;
+  associatedVideoId?: string;
 }
 
 export interface VideoMetadata {

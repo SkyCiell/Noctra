@@ -92,6 +92,11 @@ export default function NoctraDashboard() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const useProceduralSynthAudioRef = useRef<boolean>(false);
+  const isPlayingMusicRef = useRef<boolean>(isPlayingMusic);
+
+  useEffect(() => {
+    isPlayingMusicRef.current = isPlayingMusic;
+  }, [isPlayingMusic]);
 
   // Load preferences from localStorage on mount
   useEffect(() => {
@@ -194,18 +199,21 @@ export default function NoctraDashboard() {
     return resolveAtmosphereState(weatherBundle.current, astroData, currentLocation);
   }, [weatherBundle.current, astroData, currentLocation]);
 
-  // Auto-adapt recommended media if not manually locked
+  // Auto-adapt recommended media if not playing
   useEffect(() => {
-    const recommendedVideo =
-      VIDEO_REGISTRY.find((v) => v.id === atmosphereState.recommendedVideoId) || VIDEO_REGISTRY[0];
+    if (isPlayingMusicRef.current) return;
+
     const recommendedSong =
       MUSIC_REGISTRY.find((s) => s.id === atmosphereState.recommendedSongId) || MUSIC_REGISTRY[0];
+    const recommendedVideo =
+      (recommendedSong.associatedVideoId &&
+        VIDEO_REGISTRY.find((v) => v.id === recommendedSong.associatedVideoId)) ||
+      VIDEO_REGISTRY.find((v) => v.id === atmosphereState.recommendedVideoId) ||
+      VIDEO_REGISTRY[0];
 
     setActiveVideo(recommendedVideo);
-    if (!isPlayingMusic) {
-      setActiveSong(recommendedSong);
-      setMusicDuration(recommendedSong.duration);
-    }
+    setActiveSong(recommendedSong);
+    setMusicDuration(recommendedSong.duration);
   }, [atmosphereState.recommendedVideoId, atmosphereState.recommendedSongId]);
 
   // Audio Playback Engine Logic
@@ -214,6 +222,15 @@ export default function NoctraDashboard() {
       setActiveSong(song);
       setMusicDuration(song.duration);
       setIsPlayingMusic(true);
+
+      // Automatically sync video background with the song's associated video
+      if (song.associatedVideoId) {
+        const matchingVideo = VIDEO_REGISTRY.find((v) => v.id === song.associatedVideoId);
+        if (matchingVideo) {
+          setActiveVideo(matchingVideo);
+          savePreferences({ activeVideoId: matchingVideo.id });
+        }
+      }
 
       if (typeof window !== 'undefined' && audioManager) {
         audioManager.getContext().resume().catch(() => {});
@@ -234,8 +251,13 @@ export default function NoctraDashboard() {
             synthMusicPlayer.stop();
             if (audioManager) audioManager.connectMediaElement(audio);
           })
-          .catch((err) => {
-            console.warn('Audio play error, falling back to procedural synthesizer:', err);
+          .catch((err: unknown) => {
+            const error = err as Error;
+            if (error?.name === 'AbortError') {
+              // Ignore play request interruption caused by rapid track changes or loads
+              return;
+            }
+            console.warn('Audio play error, falling back to procedural synthesizer:', error);
             useProceduralSynthAudioRef.current = true;
             synthMusicPlayer.play(song.id, offset);
           });
@@ -272,7 +294,12 @@ export default function NoctraDashboard() {
             synthMusicPlayer.stop();
             if (audioManager) audioManager.connectMediaElement(audio);
           })
-          .catch(() => {
+          .catch((err: unknown) => {
+            const error = err as Error;
+            if (error?.name === 'AbortError') {
+              return;
+            }
+            console.warn('Audio play error, falling back to procedural synthesizer:', error);
             useProceduralSynthAudioRef.current = true;
             synthMusicPlayer.play(activeSong.id, musicCurrentTime);
           });
@@ -372,6 +399,16 @@ export default function NoctraDashboard() {
       clearInterval(synthTimer);
     };
   }, [repeatMode, handleNextSong, isPlayingMusic, activeSong.duration]);
+
+  // Synchronize audio source when active song changes while idle
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio && !isPlayingMusicRef.current) {
+      if (!audio.src || !audio.src.endsWith(activeSong.audioSrc)) {
+        audio.src = activeSong.audioSrc;
+      }
+    }
+  }, [activeSong.audioSrc]);
 
   // Ambient soundboard handlers
   const handleToggleAmbientChannel = (id: string) => {
@@ -525,7 +562,7 @@ export default function NoctraDashboard() {
   return (
     <main className="relative min-h-screen w-full overflow-x-hidden flex flex-col justify-between pb-32">
       {/* Hidden Audio Element for local MP3/WAV tracks */}
-      <audio ref={audioRef} preload="auto" src={activeSong.audioSrc} />
+      <audio ref={audioRef} preload="metadata" />
 
       {/* 1. Dynamic Video Background Layer */}
       <VideoBackground
@@ -589,7 +626,10 @@ export default function NoctraDashboard() {
             setIsTimeScrubbed(true);
             setSimulatedHour(hour);
           }}
-          onReset={() => setIsTimeScrubbed(false)}
+          onReset={() => {
+            setIsTimeScrubbed(false);
+            setSimulatedHour(getLocalHourInTimezone(new Date(), currentLocation.timezone));
+          }}
           isScrubbed={isTimeScrubbed}
           accentColor={atmosphereState.accentColor}
         />

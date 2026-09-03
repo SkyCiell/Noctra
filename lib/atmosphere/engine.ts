@@ -6,7 +6,7 @@ import {
   LocationData,
 } from '@/types';
 import { getWeatherInfo } from '../weather/weather-codes';
-import { findBestMatchingSong, findBestMatchingVideo } from '../media/registry';
+import { findBestMatchingSong, findBestMatchingVideo, VIDEO_REGISTRY } from '../media/registry';
 
 export function resolveAtmosphereState(
   weather: CurrentWeatherData,
@@ -145,7 +145,9 @@ export function resolveAtmosphereState(
   }
 
   const bestSong = findBestMatchingSong(uniqueTags);
-  const bestVideo = findBestMatchingVideo(uniqueTags);
+  const bestVideo =
+    (bestSong.associatedVideoId && VIDEO_REGISTRY.find((v) => v.id === bestSong.associatedVideoId)) ||
+    findBestMatchingVideo(uniqueTags);
 
   return {
     primaryTag: uniqueTags[0] || 'clear',

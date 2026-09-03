@@ -2,14 +2,39 @@ import { AtmosphereTag, SongMetadata, VideoMetadata } from '@/types';
 
 export const MUSIC_REGISTRY: SongMetadata[] = [
   {
+    id: 'song-reality-club-2112',
+    title: '2112',
+    artist: 'Reality Club',
+    album: 'What Do You Really Know?',
+    cover: '/media/music/reality-club-2112/cover.jpg',
+    duration: 357,
+    audioSrc: '/media/music/reality-club-2112/audio.mp3',
+    lyricsSrc: '/media/music/reality-club-2112/lyrics.lrc',
+    associatedVideoId: 'video-reality-club-2112',
+    atmosphereTags: [
+      'night',
+      'midnight',
+      'city',
+      'focus',
+      'calm',
+      'rain',
+      'sunset',
+      'golden_hour',
+      'cloudy',
+    ],
+    genre: 'Indie Rock / Alternative',
+    ambientType: 'Nostalgic Indie Guitars & Star-Crossed Romance',
+  },
+  {
     id: 'song-ghea-1000x',
     title: '1000X',
     artist: 'Ghea Indrawari',
     album: '1000X (Single)',
     cover: '/media/music/ghea-1000x/cover.jpg',
-    duration: 275,
+    duration: 251,
     audioSrc: '/media/music/ghea-1000x/audio.mp3',
     lyricsSrc: '/media/music/ghea-1000x/lyrics.lrc',
+    associatedVideoId: 'video-ghea-1000x',
     atmosphereTags: [
       'night',
       'midnight',
@@ -33,6 +58,16 @@ export const MUSIC_REGISTRY: SongMetadata[] = [
 ];
 
 export const VIDEO_REGISTRY: VideoMetadata[] = [
+  {
+    id: 'video-reality-club-2112',
+    title: 'Reality Club — 2112 (Official Music Video)',
+    location: 'Nocturnal Metropolis',
+    videoSrc: '/media/videos/reality-club-2112/video.mp4',
+    previewSrc: '/media/videos/reality-club-2112/preview.jpg',
+    atmosphereTags: ['night', 'midnight', 'city', 'focus', 'rain', 'sunset', 'calm'],
+    backdropTheme: 'night_city',
+    isAnimatedBackdrop: true,
+  },
   {
     id: 'video-ghea-1000x',
     title: 'Ghea Indrawari — 1000X Visualizer',
